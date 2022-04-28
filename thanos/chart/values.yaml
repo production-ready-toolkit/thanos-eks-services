@@ -1,0 +1,130 @@
+
+# Default values for Prometheus
+# Consumer configs
+consumer:
+  name: ""
+  environment: ""
+  awsAccountName: ""
+  awsAccountID: ""
+
+arnRoleMetrics: "arn:aws:iam::1234567890:role/custom-metrics-env-EksWorkerNodes-role"
+thanosReceiveStore:
+  updateStrategy: RollingUpdate
+  volume:
+    sice: 5Gi
+  replicaCount: 1
+  image:
+    updatehelm: false
+    repository: 1234567890.dkr.ecr.sa-east-1.amazonaws.com/metrics/thanos
+    pullPolicy: ifNotPresent
+    tag: "thanos-0.22.0"
+
+  store:
+    resources:
+      limits:
+        cpu: value
+        memory: value
+      requests:
+        cpu: value
+        memory: value
+
+  receive:
+  logLevel: info
+  tsdbRetention: 8h
+  tsdbBlockMin: 2h
+  tsdbBlockMax: 2h
+  replica:
+    enable: false
+    replicaCount: 2
+  resources:
+    limits:
+      cpu: value
+      memory: value
+    requests:
+      cpu: value
+      memory: value
+
+  nodeSelector:
+    enable: true
+    labels:
+      workload: thanos-receive-shared
+
+thanosRuler:
+  replicaCount: 1
+  publishRules: true 
+  image:
+    updatehelm: false
+    repository: 1234567890.dkr.ecr.sa-east-1.amazonaws.com/metrics/thanos
+    pullPolicy: IfNotPresent
+    tag: "thanos-0.22.0"
+
+  resources:
+    limits:
+      cpu: value
+      memory: value
+    requests:
+      cpu: value
+      memory: value
+
+  nodeSelector:
+    enable: true
+    labels:
+      workload: thanos-query-shared
+
+  alertsDefault:
+    enable: false
+
+
+thanosQuery:
+  replicaCount: 1
+  image:
+    updatehelm: false
+    repository: 1234567890.dkr.ecr.sa-east-1.amazonaws.com/metrics/thanos
+    pullPolicy: IfNotPresent
+    tag: "thanos-0.22.0"
+
+  resources:
+    limits:
+      cpu: value
+      memory: value
+    requests:
+      cpu: value
+      memory: value
+
+  hpa:
+    minReplicas: 1
+    maxReplicas: 10
+    avgCPU: 60
+    avgMemory: 50
+
+  nodeSelector:
+    enable: true
+    labels:
+      workload: thanos-query-shared
+
+thanosQueryFront:
+  replicaCount: 1
+  image:
+    updatehelm: false
+    repository: 1234567890.dkr.ecr.sa-east-1.amazonaws.com/metrics/thanos
+    pullPolicy: IfNotPresent
+    tag: "thanos-0.22.0"
+
+  resources:
+    limits:
+      cpu: value
+      memory: value
+    requests:
+      cpu: value
+      memory: value
+
+  hpa:
+    minReplicas: 1
+    maxReplicas: 10
+    avgCPU: 60
+    avgMemory: 50
+
+  nodeSelector:
+    enable: true
+    labels:
+      workload: thanos-query-shared
